@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ui.BookingFormController"
+      spacing="15" stylesheets="@../css/styles.css" prefWidth="350">
+    <padding><Insets top="20" right="20" bottom="20" left="20" /></padding>
+    <Label text="Confirm Your Booking" styleClass="header"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Guest:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="guestNameLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Room:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="roomNumberLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Check-in:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <Label fx:id="checkInLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Check-out:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <Label fx:id="checkOutLabel" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Confirm Booking" onAction="#handleConfirmBooking" styleClass="book-button"/>
+        <Button text="Cancel" onAction="#handleCancel"/>
+    </HBox>
+</VBox>

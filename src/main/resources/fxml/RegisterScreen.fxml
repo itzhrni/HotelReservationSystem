@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ui.RegisterController"
+      alignment="CENTER" spacing="15" stylesheets="@../css/styles.css" prefWidth="400">
+    <padding>
+        <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+    </padding>
+    <Label styleClass="header" text="Create New Account" />
+
+    <Label text="Full Name:" />
+    <TextField fx:id="nameField" promptText="John Doe" />
+    
+    <Label text="Email Address:" />
+    <TextField fx:id="emailField" promptText="john.doe@example.com" />
+    
+    <Label text="Password:" />
+    <PasswordField fx:id="passwordField" promptText="Choose a secure password" />
+
+    <Label text="Confirm Password:" />
+    <PasswordField fx:id="confirmPasswordField" promptText="Enter password again" />
+
+    <Button onAction="#handleRegister" text="Register" defaultButton="true" />
+    <Label fx:id="errorLabel" styleClass="error-label" />
+
+    <Hyperlink onAction="#handleGoToLogin" text="Already have an account? Login" />
+</VBox>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.ui.AdminPanelController"
+      spacing="10" stylesheets="@../css/styles.css">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10" />
+    </padding>
+    <Label text="Admin Dashboard" styleClass="header"/>
+
+    <TabPane VBox.vgrow="ALWAYS">
+        <tabs>
+            <Tab text="Room Management" closable="false">
+                <!-- VBox for Room Management content -->
+                <VBox spacing="10">
+                    <!-- CORRECTED PADDING SYNTAX BELOW -->
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10" />
+                    </padding>
+                    <TableView fx:id="roomManagementTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="roomNumberCol" text="Room Number" />
+                            <TableColumn fx:id="roomTypeCol" text="Type" />
+                            <TableColumn fx:id="roomPriceCol" text="Price" />
+                        </columns>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+                    </TableView>
+                    <HBox spacing="10" alignment="BOTTOM_LEFT">
+                        <TextField fx:id="roomNumberField" promptText="Room Number"/>
+                        <TextField fx:id="roomTypeField" promptText="Room Type"/>
+                        <TextField fx:id="roomPriceField" promptText="Price"/>
+                        <Button text="Add Room" onAction="#handleAddRoom"/>
+                        <Button text="Delete Selected Room" onAction="#handleDeleteRoom"/>
+                    </HBox>
+                </VBox>
+            </Tab>
+            <Tab text="View All Bookings" closable="false">
+                 <!-- VBox for Bookings content -->
+                <VBox spacing="10">
+                    <!-- CORRECTED PADDING SYNTAX BELOW -->
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10" />
+                    </padding>
+                    <TableView fx:id="allBookingsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="bookingIdCol" text="Booking ID"/>
+                            <TableColumn fx:id="guestNameCol" text="Guest Name"/>
+                            <TableColumn fx:id="bookedRoomCol" text="Room Number"/>
+                            <TableColumn fx:id="bookingCheckInCol" text="Check-in Date"/>
+                            <TableColumn fx:id="bookingCheckOutCol" text="Check-out Date"/>
+                        </columns>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </Tab>
+        </tabs>
+    </TabPane>
+    <HBox alignment="CENTER_RIGHT" prefHeight="40.0" spacing="10">
+        <padding>
+            <Insets top="10" />
+        </padding>
+        <Button onAction="#handleLogout" text="Logout" />
+    </HBox>
+</VBox>
