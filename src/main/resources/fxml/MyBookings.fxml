@@ -15,12 +15,16 @@
             <TableColumn fx:id="roomTypeCol" prefWidth="150.0" text="Room Type" />
             <TableColumn fx:id="checkInCol" prefWidth="150.0" text="Check-in Date" />
             <TableColumn fx:id="checkOutCol" prefWidth="150.0" text="Check-out Date" />
+            <!-- NEW COLUMNS FOR BILL/PAYMENT STATUS -->
+            <TableColumn fx:id="billCol" prefWidth="120.0" text="Bill Amount" />
+            <TableColumn fx:id="statusCol" prefWidth="120.0" text="Payment Status" />
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
     </TableView>
     <HBox alignment="CENTER_RIGHT" prefHeight="40.0" spacing="10">
-        <Button onAction="#handleCancelBooking" text="Cancel Selected Booking" />
+        <Button onAction="#handlePayBooking" text="Pay Selected Booking"/>
+        <Button onAction="#handleCancelBooking" text="Cancel Selected Booking"/>
     </HBox>
 </VBox>

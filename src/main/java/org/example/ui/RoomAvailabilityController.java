@@ -153,9 +153,19 @@ public class RoomAvailabilityController {
             newBooking.setCheckInDate(checkIn);
             newBooking.setCheckOutDate(checkOut);
 
+            // ===================
+            // Bill and payment logic
+            long nights = java.time.temporal.ChronoUnit.DAYS.between(checkIn, checkOut);
+            double billAmount = selectedRoom.getPrice() * nights;
+            newBooking.setBillAmount(billAmount);
+            newBooking.setPaymentStatus("DUE");
+            // ===================
+
             bookingService.createBooking(newBooking);
 
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Booking created successfully!");
+            showAlert(Alert.AlertType.INFORMATION,
+                    "Booking Success",
+                    "Booking created!\nBill: ₹" + billAmount + "\nStatus: " + newBooking.getPaymentStatus());
             handleSearch(); // Refresh available rooms
         }
     }

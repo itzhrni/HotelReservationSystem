@@ -9,9 +9,7 @@ import org.hibernate.Transaction;
 import java.util.Collections;
 import java.util.List;
 
-public class
-
-BookingService {
+public class BookingService {
 
     public void createBooking(Booking booking) {
         Transaction transaction = null;
@@ -20,9 +18,7 @@ BookingService {
             session.persist(booking);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             e.printStackTrace();
         }
     }
@@ -39,26 +35,35 @@ BookingService {
     }
 
     public List<Booking> getAllBookings() {
-    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-        // CORRECTED QUERY: "JOIN FETCH" tells Hibernate to load the related Guest and Room data immediately.
-        return session.createQuery("FROM Booking b JOIN FETCH b.guest JOIN FETCH b.room", Booking.class).list();
-    } catch (Exception e) {
-        e.printStackTrace();
-        return Collections.emptyList();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Booking b JOIN FETCH b.guest JOIN FETCH b.room", Booking.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
-}
 
     public void deleteBooking(Booking booking) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            // CORRECTED LINE: Use remove() instead of delete() for Hibernate 6
             session.remove(booking);
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
+
+    // NEW: updateBooking
+    public void updateBooking(Booking booking) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.merge(booking); // safer than update()
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             e.printStackTrace();
         }
     }

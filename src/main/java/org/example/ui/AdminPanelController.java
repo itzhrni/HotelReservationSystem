@@ -2,7 +2,6 @@ package org.example.ui;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -17,8 +16,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 public class AdminPanelController {
-
-    // Room Management UI
     @FXML private TableView<Room> roomManagementTable;
     @FXML private TableColumn<Room, String> roomNumberCol;
     @FXML private TableColumn<Room, String> roomTypeCol;
@@ -27,30 +24,31 @@ public class AdminPanelController {
     @FXML private TextField roomTypeField;
     @FXML private TextField roomPriceField;
 
-    // Booking Viewing UI
     @FXML private TableView<Booking> allBookingsTable;
     @FXML private TableColumn<Booking, Integer> bookingIdCol;
     @FXML private TableColumn<Booking, String> guestNameCol;
     @FXML private TableColumn<Booking, String> bookedRoomCol;
     @FXML private TableColumn<Booking, LocalDate> bookingCheckInCol;
     @FXML private TableColumn<Booking, LocalDate> bookingCheckOutCol;
+    @FXML private TableColumn<Booking, Double> billCol;
+    @FXML private TableColumn<Booking, String> statusCol;
 
     private final RoomService roomService = new RoomService();
     private final BookingService bookingService = new BookingService();
 
     @FXML
     public void initialize() {
-        // Room table setup
         roomNumberCol.setCellValueFactory(new PropertyValueFactory<>("roomNumber"));
         roomTypeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         roomPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        // Bookings table setup
         bookingIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         guestNameCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getGuest().getName()));
         bookedRoomCol.setCellValueFactory(cell -> new javafx.beans.property.SimpleStringProperty(cell.getValue().getRoom().getRoomNumber()));
         bookingCheckInCol.setCellValueFactory(new PropertyValueFactory<>("checkInDate"));
         bookingCheckOutCol.setCellValueFactory(new PropertyValueFactory<>("checkOutDate"));
+        billCol.setCellValueFactory(new PropertyValueFactory<>("billAmount"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
 
         refreshAllViews();
     }
@@ -85,17 +83,17 @@ public class AdminPanelController {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a room to delete.");
         }
     }
-    
+
     private void clearRoomFields() {
         roomNumberField.clear();
         roomTypeField.clear();
         roomPriceField.clear();
     }
-    
+
     @FXML
     protected void handleLogout() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/LoginScreen.fxml"));
+            Parent root = javafx.fxml.FXMLLoader.load(getClass().getResource("/fxml/LoginScreen.fxml"));
             Stage stage = (Stage) roomManagementTable.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 400));
             stage.setTitle("Hotel Reservation System Login");
@@ -110,5 +108,22 @@ public class AdminPanelController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.show();
+    }
+
+    @FXML
+    private void handleMarkAsPaid() {
+        Booking selectedBooking = allBookingsTable.getSelectionModel().getSelectedItem();
+        if (selectedBooking == null) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a booking to mark as paid.");
+            return;
+        }
+        if ("PAID".equals(selectedBooking.getPaymentStatus())) {
+            showAlert(Alert.AlertType.INFORMATION, "Already Paid", "Booking already marked as paid.");
+            return;
+        }
+        selectedBooking.setPaymentStatus("PAID");
+        bookingService.updateBooking(selectedBooking);
+        refreshAllViews();
+        showAlert(Alert.AlertType.INFORMATION, "Success", "Selected booking marked as paid.");
     }
 }

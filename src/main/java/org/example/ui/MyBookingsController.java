@@ -9,7 +9,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 import org.example.model.Booking;
 import org.example.model.Guest;
 import org.example.service.BookingService;
@@ -24,6 +23,8 @@ public class MyBookingsController {
     @FXML private TableColumn<Booking, String> roomTypeCol;
     @FXML private TableColumn<Booking, LocalDate> checkInCol;
     @FXML private TableColumn<Booking, LocalDate> checkOutCol;
+    @FXML private TableColumn<Booking, Double> billCol;
+    @FXML private TableColumn<Booking, String> statusCol;
 
     private Guest currentGuest;
     private final BookingService bookingService = new BookingService();
@@ -34,6 +35,8 @@ public class MyBookingsController {
         roomTypeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRoom().getType()));
         checkInCol.setCellValueFactory(new PropertyValueFactory<>("checkInDate"));
         checkOutCol.setCellValueFactory(new PropertyValueFactory<>("checkOutDate"));
+        billCol.setCellValueFactory(new PropertyValueFactory<>("billAmount"));
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
     }
 
     public void loadBookings(Guest guest) {
@@ -50,20 +53,35 @@ public class MyBookingsController {
             showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a booking to cancel.");
             return;
         }
-
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirm Cancellation");
         confirmation.setHeaderText("Are you sure you want to cancel the booking for Room " + selectedBooking.getRoom().getRoomNumber() + "?");
-        
         Optional<ButtonType> result = confirmation.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             bookingService.deleteBooking(selectedBooking);
-            // Refresh the table view
             loadBookings(currentGuest);
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Booking has been canceled.");
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Booking cancelled.");
         }
     }
-    
+
+    // NEW: pay logic
+    @FXML
+    private void handlePayBooking() {
+        Booking selectedBooking = bookingsTableView.getSelectionModel().getSelectedItem();
+        if (selectedBooking == null) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a booking to pay for.");
+            return;
+        }
+        if ("PAID".equals(selectedBooking.getPaymentStatus())) {
+            showAlert(Alert.AlertType.INFORMATION, "Already Paid", "Booking already marked as paid.");
+            return;
+        }
+        selectedBooking.setPaymentStatus("PAID");
+        bookingService.updateBooking(selectedBooking);
+        loadBookings(currentGuest);
+        showAlert(Alert.AlertType.INFORMATION, "Payment Complete", "Booking marked as paid!");
+    }
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

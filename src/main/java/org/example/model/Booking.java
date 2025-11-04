@@ -2,7 +2,6 @@ package org.example.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-
 @Entity
 @Table(name = "bookings")
 public class Booking {
@@ -33,4 +32,17 @@ public class Booking {
     public void setCheckInDate(LocalDate checkInDate) { this.checkInDate = checkInDate; }
     public LocalDate getCheckOutDate() { return checkOutDate; }
     public void setCheckOutDate(LocalDate checkOutDate) { this.checkOutDate = checkOutDate; }
+    // Add this to Booking.java (inside class)
+    private Double billAmount;
+
+    @Column(nullable = false)
+    private String paymentStatus = "DUE"; // other values: "PAID", "DUE"
+
+    // Getters and setters for new fields
+    public double getBillAmount() { return billAmount; }
+    public void setBillAmount(double billAmount) { this.billAmount = billAmount; }
+
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
+
 }
